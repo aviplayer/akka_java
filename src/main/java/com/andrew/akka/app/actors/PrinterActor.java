@@ -1,6 +1,8 @@
 package com.andrew.akka.app.actors;
 
 import akka.actor.AbstractActor;
+import akka.actor.ActorRef;
+import akka.actor.PoisonPill;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import com.andrew.akka.commands.FolderCommands;
@@ -21,14 +23,15 @@ public class PrinterActor extends AbstractActor {
     @Override
     public Receive createReceive() {
         return receiveBuilder()
-                .matchAny(message -> {
-                    log.info("Logging  {}! ", message);
+                .match(FolderCommands.ConditionNotMet.class, command -> {
+                    log.info(command.message);
                 })
-                .match(FolderCommands.ConditionNotMet.class, conditionNotMet -> {
-                    log.error("conditionNotMet Exception: ", conditionNotMet.message);
+                .match(FolderCommands.Delete.class, command -> {
+                    log.info("Stopping Printer Actor");
+                    getSelf().tell(PoisonPill.getInstance(), ActorRef.noSender());
                 })
-                .match(FolderCommands.Delete.class, s -> {
-                    getContext().stop(getSelf());
+                .matchAny(command -> {
+                    log.info("Logging  {}! " + command.getClass().getName() + " " + command);
                 })
                 .build();
     }

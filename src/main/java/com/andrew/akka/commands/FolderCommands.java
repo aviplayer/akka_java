@@ -1,6 +1,6 @@
 package com.andrew.akka.commands;
 
-import akka.actor.PoisonPill;
+import akka.actor.ActorRef;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -10,18 +10,20 @@ public class FolderCommands {
     @AllArgsConstructor
     @ToString
     public static class GetData {
+        public final ActorRef replyTo;
     }
 
     @AllArgsConstructor
     @ToString
     public static class UpdateName {
-        public final String name;
+        public final String newName;
     }
 
     @AllArgsConstructor
     @ToString
     public static class GetDataConditionally {
         public final String condition;
+        public final ActorRef replyTo;
     }
 
     @RequiredArgsConstructor
@@ -31,9 +33,7 @@ public class FolderCommands {
     }
 
     @RequiredArgsConstructor
-        @ToString
-        public static class Delete {
-            public final PoisonPill poisonPill = PoisonPill.getInstance();
-        }
+    @ToString
+    public static class Delete {}
 }
 

@@ -1,4 +1,4 @@
-package com.andrew.akka.app;
+package com.andrew.akka.app.actors;
 
 import akka.actor.AbstractActor;
 import akka.event.Logging;
@@ -21,19 +21,13 @@ public class PrinterActor extends AbstractActor {
     @Override
     public Receive createReceive() {
         return receiveBuilder()
-                .match(FolderCommands.CreateFolder.class, response -> {
-                    log.info("Create folder: ", response.name);
+                .matchAny(message -> {
+                    log.info("Logging  {}! ", message);
                 })
-                .match(FolderCommands.UpdateName.class, response -> {
-                    log.info("Update folder: ", response.name);
+                .match(FolderCommands.ConditionNotMet.class, conditionNotMet -> {
+                    log.error("conditionNotMet Exception: ", conditionNotMet.message);
                 })
-                .match(FolderCommands.GetData.class, response -> {
-                    log.info("Update folder: ", response.replyTo.path());
-                })
-                .matchAny(s -> {
-                    log.info("Logging  {}!", s);
-                })
-                .matchEquals("stop", s -> {
+                .match(FolderCommands.Delete.class, s -> {
                     getContext().stop(getSelf());
                 })
                 .build();

@@ -1,29 +1,39 @@
 package com.andrew.akka.commands;
 
-import akka.actor.ActorRef;
+import akka.actor.PoisonPill;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 public class FolderCommands {
-    
-    @AllArgsConstructor
-    public static class CreateFolder {
-        public final String name;
-    }
 
     @AllArgsConstructor
+    @ToString
     public static class GetData {
-        public final ActorRef replyTo;
     }
 
     @AllArgsConstructor
+    @ToString
     public static class UpdateName {
-        public final int id;
         public final String name;
     }
 
     @AllArgsConstructor
+    @ToString
     public static class GetDataConditionally {
-        public final ActorRef replyTo;
         public final String condition;
     }
+
+    @RequiredArgsConstructor
+    @ToString
+    public static class ConditionNotMet {
+        public final String message;
+    }
+
+    @RequiredArgsConstructor
+        @ToString
+        public static class Delete {
+            public final PoisonPill poisonPill = PoisonPill.getInstance();
+        }
 }
+

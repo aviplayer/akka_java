@@ -1,37 +1,46 @@
 package com.andrew.akka.app.actors;
 
-import akka.actor.AbstractActor;
-import akka.actor.ActorRef;
-import akka.actor.PoisonPill;
-import akka.event.Logging;
-import akka.event.LoggingAdapter;
+import akka.actor.typed.Behavior;
+import akka.actor.typed.PostStop;
+import akka.actor.typed.javadsl.AbstractBehavior;
+import akka.actor.typed.javadsl.ActorContext;
+import akka.actor.typed.javadsl.Behaviors;
+import akka.actor.typed.javadsl.Receive;
 import com.andrew.akka.commands.FolderCommands;
+import org.slf4j.Logger;
 
-public class PrinterActor extends AbstractActor {
-    private final LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
+public class PrinterActor extends AbstractBehavior<FolderCommands.FolderCommand> {
+    private Logger log = getContext().getLog();
 
-    @Override
-    public void preStart() {
-        log.info("Printer started");
+    static Behavior<FolderCommands.FolderCommand> create() {
+        return Behaviors.setup(PrinterActor::new);
+    }
+
+    private PrinterActor(ActorContext<FolderCommands.FolderCommand> context) {
+        super(context);
+        log.info("Printer Actor created!");
+    }
+
+    private Behavior<FolderCommands.FolderCommand> postStop() {
+        log.info("Printer Actor stopped");
+        return this;
     }
 
     @Override
-    public void postStop() {
-        log.info("Printer stopped");
-    }
-
-    @Override
-    public Receive createReceive() {
-        return receiveBuilder()
-                .match(FolderCommands.ConditionNotMet.class, command -> {
+    public Receive<FolderCommands.FolderCommand> createReceive() {
+        return newReceiveBuilder()
+                .onSignal(PostStop.class, signal -> postStop())
+                .onMessage(FolderCommands.ConditionNotMet.class, command -> {
                     log.info(command.message);
+                    return this;
                 })
-                .match(FolderCommands.Delete.class, command -> {
+                .onMessage(FolderCommands.Stop.class, command -> {
                     log.info("Stopping Printer Actor");
-                    getSelf().tell(PoisonPill.getInstance(), ActorRef.noSender());
+                    return Behaviors.stopped(() -> getContext().getSystem().log().info("Stopping Printer Actor!"));
                 })
-                .matchAny(command -> {
+                .onAnyMessage(command -> {
                     log.info("Logging  {}! " + command.getClass().getName() + " " + command);
+                    return this;
                 })
                 .build();
     }

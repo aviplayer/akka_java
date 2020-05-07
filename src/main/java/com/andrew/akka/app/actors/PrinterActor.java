@@ -6,42 +6,51 @@ import akka.actor.typed.javadsl.AbstractBehavior;
 import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
-import com.andrew.akka.commands.FolderCommands;
+import com.andrew.akka.commands.FolderMessages;
+import com.andrew.akka.commands.PrinterMessages;
 import org.slf4j.Logger;
 
-public class PrinterActor extends AbstractBehavior<FolderCommands.FolderCommand> {
+public class PrinterActor extends AbstractBehavior<PrinterMessages> {
     private Logger log = getContext().getLog();
 
-    static Behavior<FolderCommands.FolderCommand> create() {
-        return Behaviors.setup(PrinterActor::new);
-    }
-
-    private PrinterActor(ActorContext<FolderCommands.FolderCommand> context) {
+    private PrinterActor(ActorContext<PrinterMessages> context) {
         super(context);
         log.info("Printer Actor created!");
     }
 
-    private Behavior<FolderCommands.FolderCommand> postStop() {
+    private Behavior<PrinterMessages> postStop() {
         log.info("Printer Actor stopped");
         return this;
     }
 
     @Override
-    public Receive<FolderCommands.FolderCommand> createReceive() {
+    public Receive<PrinterMessages> createReceive() {
         return newReceiveBuilder()
                 .onSignal(PostStop.class, signal -> postStop())
-                .onMessage(FolderCommands.ConditionNotMet.class, command -> {
-                    log.info(command.message);
+                .onMessage(FolderMessages.ConditionNotMet.class, message -> {
+                    log.info("Folder doesn't met condition: {}", message.getCondition());
                     return this;
                 })
-                .onMessage(FolderCommands.Stop.class, command -> {
+                .onMessage(FolderMessages.FolderData.class, message -> {
+                    log.info("Folder with id {} has name {}", message.getId(), message.getName());
+                    return this;
+                })
+                .onMessage(PrinterMessages.Stop.class, command -> {
                     log.info("Stopping Printer Actor");
                     return Behaviors.stopped(() -> getContext().getSystem().log().info("Stopping Printer Actor!"));
                 })
+                .onMessage(PrinterMessages.SimpleMessage.class, message -> {
+                    log.info(message.getData());
+                    return this;
+                })
                 .onAnyMessage(command -> {
-                    log.info("Logging  {}! " + command.getClass().getName() + " " + command);
+                    log.info("Logging {} {} ", command.getClass().getName(), command);
                     return this;
                 })
                 .build();
+    }
+
+    public static Behavior<PrinterMessages> create() {
+        return Behaviors.setup(PrinterActor::new);
     }
 }

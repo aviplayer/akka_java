@@ -7,26 +7,25 @@ import akka.actor.typed.javadsl.AbstractBehavior;
 import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
-import com.andrew.akka.commands.FolderCommands;
+import com.andrew.akka.commands.FolderMessages;
 import lombok.EqualsAndHashCode;
 import org.slf4j.Logger;
 
 import java.time.ZonedDateTime;
 
 @EqualsAndHashCode(callSuper = false)
-public class FolderActor extends AbstractBehavior<FolderCommands.FolderCommand> {
+public class FolderActor extends AbstractBehavior<FolderMessages.FolderMessage> {
     private final int id;
     private String name;
     private final ZonedDateTime createdAt;
     private ZonedDateTime modifiedAt;
-    Logger log = getContext().getLog();
-    ActorRef printer;
+    private Logger log = getContext().getLog();
 
-    static Behavior<FolderCommands.FolderCommand> create() {
+    static Behavior<FolderMessages.FolderMessage> create() {
         return Behaviors.setup(FolderActor::new);
     }
 
-    private FolderActor(ActorContext<FolderCommands.FolderCommand> context) {
+    private FolderActor(ActorContext<FolderMessages.FolderMessage> context) {
         super(context);
         this.id = 1;
         this.name = "First Name";
@@ -34,42 +33,39 @@ public class FolderActor extends AbstractBehavior<FolderCommands.FolderCommand> 
         this.modifiedAt = this.createdAt;
     }
 
-    private FolderCommands.FolderCommand getDataByCondition(String condition) {
-        if (name.toLowerCase().contains(condition.toLowerCase())) {
-            return new FolderCommands.GetFolder(id, name, createdAt, modifiedAt);
-        } else {
-            return new FolderCommands.ConditionNotMet("Folder with  id {" + id + "} has name {" + name + "}");
-        }
-    }
 
-
-    private Behavior<FolderCommands.FolderCommand> postStop() {
+    private Behavior<FolderMessages.FolderMessage> postStop() {
         log.info("Folder Actor stopped");
         return this;
     }
 
 
     @Override
-    public Receive<FolderCommands.FolderCommand> createReceive() {
+    public Receive<FolderMessages.FolderMessage> createReceive() {
         return newReceiveBuilder()
                 .onSignal(PostStop.class, signal -> postStop())
-                .onMessage(FolderCommands.UpdateName.class, command -> {
+                .onMessage(FolderMessages.UpdateName.class, command -> {
                     modifiedAt = ZonedDateTime.now();
                     name = command.newName;
                     log.info("Folder updated: " + toString());
                     return this;
                 })
-                .onMessage(FolderCommands.GetData.class, command -> {
-                    command.replyTo.tell(new FolderCommands.GetFolder(id, name, createdAt, modifiedAt));
+                .onMessage(FolderMessages.GetData.class, command -> {
+                    command.replyTo.tell(new FolderMessages.FolderData(id, name, createdAt, modifiedAt));
                     return this;
                 })
-                .onMessage(FolderCommands.GetDataConditionally.class, command -> {
-                    command.replyTo.tell(new FolderCommands.Folder(getDataByCondition(command.condition)));
+                .onMessage(FolderMessages.GetDataConditionally.class, command -> {
+                    if (name.toLowerCase().contains(command.getCondition().toLowerCase())) {
+                        command.getReplyTo().tell(new FolderMessages.FolderData(id, name, createdAt, modifiedAt));
+                    } else {
+
+                        command.getReplyTo().tell(new FolderMessages.ConditionNotMet(command.getCondition()));
+                    }
                     return this;
                 })
-                .onMessage(FolderCommands.Delete.class, command -> {
+                .onMessage(FolderMessages.Delete.class, command -> {
                     log.info("Stopping Folder Actor");
-                    command.replyTo.tell(new FolderCommands.Stop());
+                    command.getReplyTo().tell(new FolderMessages.Stopped());
                     return Behaviors.stopped(() -> getContext().getSystem().log().info("Stopping Folder Actor!"));
                 })
                 .onAnyMessage(command -> {

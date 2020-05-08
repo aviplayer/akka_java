@@ -1,9 +1,8 @@
-Step #1: Simple Folder
+##Step #1: Simple Folder
 
 At the first step you need to create a simple actor system with two actors:
 
 - Printer
-
 - Folder
 
 Printer is an actor that is responsible for printing every message it receives to log.
@@ -11,11 +10,8 @@ Printer is an actor that is responsible for printing every message it receives t
 Folder - actor that represents simple folder entity with next attributes:
 
 - id - integer value, unique identifier, cannot be changed;
-
 - name - String value;
-
 - createAt - timestamp value, cannot be changed;
-
 - modifiedAt - timestamp value, cannot be changed.
 
 Folder is able to receive the next messages:
@@ -29,3 +25,17 @@ Folder is able to receive the next messages:
 - Delete - actor should be gracefully stopped.
 
 Depending on implementation messages can be sent via rootBehavior (akka typed) or from outside of actor system (akka classic).
+
+
+##Step #2: Folder Collection
+
+On this step FolderCollection actor should be created. This actor should store all folders and generate id for them.
+
+FolderCollection should be able to receive the next messages:
+
+- CreateFolder(name) - new Folder actor should be created with given name and next integer id
+- UpdateFolderById(id, name) - updates Folder with given id by setting given name (modifiedAt field should be updated as well);
+- DeleteFolderById(id) - deletes folder with given id;
+- GetFolderById(id, replyTo) - sends folder data to `replyTo` actor;
+- GetAllFolders(replyTo) - sends array of all folders data to `replyTo` actor (may be presented as array of tuples);
+- GetFoldersConditionally(nameCondition, replyTo) - sends array of folder data representing folders that met condition.

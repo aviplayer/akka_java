@@ -1,6 +1,5 @@
 package com.andrew.akka.app.actors;
 
-import akka.actor.typed.ActorRef;
 import akka.actor.typed.Behavior;
 import akka.actor.typed.PostStop;
 import akka.actor.typed.javadsl.AbstractBehavior;
@@ -8,27 +7,25 @@ import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
 import com.andrew.akka.commands.FolderMessages;
-import lombok.EqualsAndHashCode;
 import org.slf4j.Logger;
 
 import java.time.ZonedDateTime;
 
-@EqualsAndHashCode(callSuper = false)
 public class FolderActor extends AbstractBehavior<FolderMessages.FolderMessage> {
-    private final int id;
+    private int id;
     private String name;
     private final ZonedDateTime createdAt;
     private ZonedDateTime modifiedAt;
     private Logger log = getContext().getLog();
 
-    static Behavior<FolderMessages.FolderMessage> create() {
-        return Behaviors.setup(FolderActor::new);
+    static Behavior<FolderMessages.FolderMessage> create(int id, String name) {
+        return Behaviors.setup(context -> new FolderActor(context, id, name));
     }
 
-    private FolderActor(ActorContext<FolderMessages.FolderMessage> context) {
+    private FolderActor(ActorContext<FolderMessages.FolderMessage> context, int id, String name) {
         super(context);
-        this.id = 1;
-        this.name = "First Name";
+        this.id = id;
+        this.name = name;
         this.createdAt = ZonedDateTime.now();
         this.modifiedAt = this.createdAt;
     }

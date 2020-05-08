@@ -5,13 +5,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import org.springframework.format.Printer;
 
 import java.time.ZonedDateTime;
 
 public class FolderMessages {
     public interface FolderMessage {}
+
     public interface FolderResponses {}
+
+    public interface FolderAggregatorMessage {}
 
     @AllArgsConstructor
     @ToString
@@ -36,7 +38,7 @@ public class FolderMessages {
     @RequiredArgsConstructor
     @ToString
     @Getter
-    public static class ConditionNotMet implements FolderMessage, PrinterMessages {
+    public static class ConditionNotMet implements FolderMessage, PrinterMessages, FolderAggregatorMessage {
         private final String condition;
     }
 
@@ -50,7 +52,7 @@ public class FolderMessages {
     @RequiredArgsConstructor
     @ToString
     @Getter
-    public static class FolderData implements PrinterMessages {
+    public static class FolderData implements PrinterMessages, FolderCollectionMessages, FolderMessage, FolderAggregatorMessage {
         private final int id;
         private final String name;
         private final ZonedDateTime createdAt;
@@ -60,6 +62,7 @@ public class FolderMessages {
     public static class Stopped {
     }
 
-    public static class Stop implements FolderMessage {}
+    public static class Stop implements FolderMessage {
+    }
 }
 

@@ -60,4 +60,12 @@ public interface FolderCollectionMessages {
     public static class FoldersData implements FolderCollectionMessages {
         List<FolderMessages.FolderData> folders;
     }
+
+    @AllArgsConstructor
+    @ToString
+    @Getter
+    public static class FoldersDataWithCondition implements FolderCollectionMessages {
+        List<FolderMessages.FolderData> folders;
+        String condition;
+    }
 }

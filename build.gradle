@@ -25,6 +25,8 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-webflux'
   compile 'com.typesafe.akka:akka-actor-typed_2.13:2.6.3'
   compile 'ch.qos.logback:logback-classic:1.2.3'
+  
+  implementation 'org.javatuples:javatuples:1.2'
 
   compileOnly 'org.projectlombok:lombok'
   annotationProcessor 'org.projectlombok:lombok'

@@ -38,7 +38,7 @@ public class FolderMessages {
     @RequiredArgsConstructor
     @ToString
     @Getter
-    public static class ConditionNotMet implements FolderMessage, PrinterMessages, FolderAggregatorMessage {
+    public static class ConditionNotMet implements FolderMessage, PrinterMessages, FolderAggregatorMessage, FolderCollectionMessages {
         private final String condition;
     }
 
@@ -59,10 +59,9 @@ public class FolderMessages {
         private final ZonedDateTime modifiedAt;
     }
 
-    public static class Stopped {
-    }
+    public static class Stopped implements FolderCollectionMessages{}
 
-    public static class Stop implements FolderMessage {
+    public static class Stop implements FolderMessage, FolderCollectionMessages{
     }
 }
 

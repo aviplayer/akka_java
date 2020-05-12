@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
-public interface PrinterMessages extends FolderMessages.FolderResponses {
+public interface PrinterMessages extends FolderMessages.FolderMessage {
     @RequiredArgsConstructor
     @ToString
     @Getter

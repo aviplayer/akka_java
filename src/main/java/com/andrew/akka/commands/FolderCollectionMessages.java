@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface FolderCollectionMessages {
 
+
     @AllArgsConstructor
     @ToString
     @Getter
@@ -34,16 +35,23 @@ public interface FolderCollectionMessages {
     @AllArgsConstructor
     @ToString
     @Getter
+    public static class FolderDelete implements FolderCollectionMessages {
+        private int id;
+    }
+
+    @AllArgsConstructor
+    @ToString
+    @Getter
     public static class GetFolderById implements FolderCollectionMessages {
         private int id;
-        ActorRef replyTo;
+        private ActorRef replyTo;
     }
 
     @AllArgsConstructor
     @ToString
     @Getter
     public static class GetAllFolders implements FolderCollectionMessages {
-        ActorRef replyTo;
+        private ActorRef replyTo;
     }
 
     @AllArgsConstructor
@@ -57,14 +65,14 @@ public interface FolderCollectionMessages {
     @AllArgsConstructor
     @ToString
     @Getter
-    public static class FoldersData implements FolderCollectionMessages {
+    public static class FoldersData implements FolderCollectionMessages, PrinterMessages {
         List<FolderMessages.FolderData> folders;
     }
 
     @AllArgsConstructor
     @ToString
     @Getter
-    public static class FoldersDataWithCondition implements FolderCollectionMessages {
+    public static class FoldersDataWithCondition implements FolderCollectionMessages, PrinterMessages {
         List<FolderMessages.FolderData> folders;
         String condition;
     }

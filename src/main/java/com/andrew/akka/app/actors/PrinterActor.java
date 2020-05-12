@@ -6,6 +6,7 @@ import akka.actor.typed.javadsl.AbstractBehavior;
 import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
+import com.andrew.akka.commands.FolderCollectionMessages;
 import com.andrew.akka.commands.FolderMessages;
 import com.andrew.akka.commands.PrinterMessages;
 import org.slf4j.Logger;
@@ -41,6 +42,17 @@ public class PrinterActor extends AbstractBehavior<PrinterMessages> {
                 })
                 .onMessage(PrinterMessages.SimpleMessage.class, message -> {
                     log.info(message.getData());
+                    return this;
+                })
+                .onMessage(FolderCollectionMessages.FoldersDataWithCondition.class, message -> {
+                    var folders = message.getFolders();
+                    var condition = message.getCondition();
+                    log.info("\nFolders with condition {} : {}\n", condition, folders);
+                    return this;
+                })
+                .onMessage(FolderCollectionMessages.FoldersData.class, message -> {
+                    var folders = message.getFolders();
+                    log.info("Folders are : \n{}\n", folders);
                     return this;
                 })
                 .onAnyMessage(command -> {

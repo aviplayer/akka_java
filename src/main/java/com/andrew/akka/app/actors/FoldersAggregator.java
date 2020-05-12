@@ -23,7 +23,7 @@ class FoldersAggregator {
     public static Behavior<FolderMessages.FolderAggregatorMessage> folderAggregator(Map<Integer, ActorRef> folders, ActorRef replyTo, String condition) {
         return Behaviors.setup(context -> {
             folders.values().forEach(folder -> folder.tell(new FolderMessages.GetDataConditionally(condition, context.getSelf())));
-            return folderAggregatorWithCondition(folders, replyTo, new ArrayList<>(), condition, new ArrayList<>());
+            return folderAggregatorWithCondition(folders, replyTo, new ArrayList<>(), condition, 0);
         });
     }
 
@@ -53,18 +53,17 @@ class FoldersAggregator {
             ActorRef replyTo,
             List<FolderMessages.FolderData> responses,
             String condition,
-            ArrayList<Integer> counter) {
-        if (counter.size() == folders.size()) {
+            int counter) {
+        if (counter == folders.size()) {
             replyTo.tell(new FolderCollectionMessages.FoldersDataWithCondition(responses, condition));
             return Behaviors.stopped();
         }
-        counter.add(1);
         return Behaviors.receive(
                 (context, message) -> {
                     if (message instanceof FolderMessages.FolderData) {
                         responses.add((FolderMessages.FolderData) message);
                     }
-                    return folderAggregatorWithCondition(folders, replyTo, responses, condition, counter);
+                    return folderAggregatorWithCondition(folders, replyTo, responses, condition, counter + 1);
                 },
                 (context, signal) -> {
                     if (signal instanceof PostStop) {
@@ -73,5 +72,4 @@ class FoldersAggregator {
                     return Behaviors.same();
                 });
     }
-
 }

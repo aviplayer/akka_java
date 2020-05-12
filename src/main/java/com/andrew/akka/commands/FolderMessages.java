@@ -1,17 +1,12 @@
 package com.andrew.akka.commands;
 
 import akka.actor.typed.ActorRef;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.ZonedDateTime;
 
 public class FolderMessages {
     public interface FolderMessage {}
-
-    public interface FolderResponses {}
 
     public interface FolderAggregatorMessage {}
 
@@ -21,10 +16,13 @@ public class FolderMessages {
         public final ActorRef replyTo;
     }
 
+    @NoArgsConstructor
+    @Getter
+    @Setter
     @AllArgsConstructor
     @ToString
-    public static class UpdateName implements FolderMessage {
-        public final String newName;
+    public static class UpdateName extends FolderMessages implements FolderMessage {
+        private String newName;
     }
 
     @AllArgsConstructor
@@ -49,7 +47,7 @@ public class FolderMessages {
         private final ActorRef replyTo;
     }
 
-    @RequiredArgsConstructor
+    @AllArgsConstructor
     @ToString
     @Getter
     public static class FolderData implements PrinterMessages, FolderCollectionMessages, FolderMessage, FolderAggregatorMessage {
@@ -57,11 +55,6 @@ public class FolderMessages {
         private final String name;
         private final ZonedDateTime createdAt;
         private final ZonedDateTime modifiedAt;
-    }
-
-    public static class Stopped implements FolderCollectionMessages{}
-
-    public static class Stop implements FolderMessage, FolderCollectionMessages{
     }
 }
 

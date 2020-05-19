@@ -30,12 +30,14 @@ dependencies {
   compile group: 'org.fusesource.leveldbjni', name: 'leveldbjni-all', version: '1.8'
   compile group: 'com.typesafe.akka', name: 'akka-persistence-typed_2.13', version: '2.6.5'
   compile group: 'com.typesafe.akka', name: 'akka-serialization-jackson_2.13', version: '2.6.5'
+  
+  compile group: 'com.typesafe.akka', name: 'akka-cluster-typed_2.13', version: '2.6.5'
 
   compileOnly 'org.projectlombok:lombok'
   annotationProcessor 'org.projectlombok:lombok'
 }
 
-mainClassName = "com.andrew.akka.app.App"
+mainClassName = "com.andrew.App"
 
 run {
   standardInput = System.in

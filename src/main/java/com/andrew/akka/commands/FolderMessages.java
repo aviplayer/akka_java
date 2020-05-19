@@ -1,6 +1,7 @@
 package com.andrew.akka.commands;
 
 import akka.actor.typed.ActorRef;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.*;
 
 import java.time.ZonedDateTime;
@@ -33,11 +34,14 @@ public class FolderMessages {
         private final ActorRef replyTo;
     }
 
-    @RequiredArgsConstructor
     @ToString
     @Getter
     public static class ConditionNotMet implements FolderMessage, PrinterMessages, FolderAggregatorMessage, FolderCollectionMessages {
         private final String condition;
+        @JsonCreator
+        public ConditionNotMet(String condition) {
+            this.condition = condition;
+        }
     }
 
     @RequiredArgsConstructor

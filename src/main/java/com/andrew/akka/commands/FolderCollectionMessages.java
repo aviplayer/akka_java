@@ -1,6 +1,7 @@
 package com.andrew.akka.commands;
 
 import akka.actor.typed.ActorRef;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -10,11 +11,14 @@ import java.util.List;
 public interface FolderCollectionMessages {
 
 
-    @AllArgsConstructor
     @ToString
     @Getter
-    public static class CreateFolder implements FolderCollectionMessages {
+    public class CreateFolder implements FolderCollectionMessages {
         private final String name;
+        @JsonCreator
+        public CreateFolder(String name) {
+            this.name = name;
+        }
     }
 
     @AllArgsConstructor
@@ -24,12 +28,15 @@ public interface FolderCollectionMessages {
         private int id;
         private String name;
     }
-
-    @AllArgsConstructor
+    
     @ToString
     @Getter
     public static class DeleteFolderById implements FolderCollectionMessages {
         private int id;
+        @JsonCreator
+        public DeleteFolderById(int id){
+            this.id = id;
+        }
     }
 
     @AllArgsConstructor
@@ -47,11 +54,14 @@ public interface FolderCollectionMessages {
         private ActorRef replyTo;
     }
 
-    @AllArgsConstructor
     @ToString
     @Getter
     public static class GetAllFolders implements FolderCollectionMessages {
         private ActorRef replyTo;
+        @JsonCreator
+        public GetAllFolders(ActorRef replyTo) {
+            this.replyTo = replyTo;
+        }
     }
 
     @AllArgsConstructor
@@ -62,11 +72,14 @@ public interface FolderCollectionMessages {
         String condition;
     }
 
-    @AllArgsConstructor
     @ToString
     @Getter
     public static class FoldersData implements FolderCollectionMessages, PrinterMessages {
         List<FolderMessages.FolderData> folders;
+        @JsonCreator
+        public FoldersData(List<FolderMessages.FolderData> folders) {
+            this.folders = folders;
+        }
     }
 
     @AllArgsConstructor

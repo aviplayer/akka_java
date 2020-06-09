@@ -1,8 +1,6 @@
-package com.andrew.akka.app.cluster;
+package com.andrew.akka.spring.akka;
 
-import akka.actor.typed.ActorRef;
-import akka.actor.typed.Behavior;
-import akka.actor.typed.SupervisorStrategy;
+import akka.actor.typed.*;
 import akka.actor.typed.javadsl.AbstractBehavior;
 import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
@@ -19,6 +17,7 @@ import com.andrew.akka.commands.FolderCollectionMessages;
 
 import java.time.Duration;
 
+
 public final class ClusterListener extends AbstractBehavior<ClusterListener.Event> {
 
     interface Event {
@@ -34,6 +33,7 @@ public final class ClusterListener extends AbstractBehavior<ClusterListener.Even
     }
 
     private static final class MemberChange implements Event {
+
         final ClusterEvent.MemberEvent memberEvent;
 
         MemberChange(ClusterEvent.MemberEvent memberEvent) {
@@ -46,6 +46,7 @@ public final class ClusterListener extends AbstractBehavior<ClusterListener.Even
     }
 
     private ClusterListener(ActorContext<Event> context) {
+
         super(context);
 
         Cluster cluster = Cluster.get(context.getSystem());
@@ -75,14 +76,15 @@ public final class ClusterListener extends AbstractBehavior<ClusterListener.Even
             foldersCollection.tell(new FolderCollectionMessages.CreateFolder("Folder"));
         }
 
-        foldersCollection.tell(new FolderCollectionMessages.DeleteFolderById(1));
-        foldersCollection.tell(new FolderCollectionMessages.GetFolderById(1, printer));
-        foldersCollection.tell(new FolderCollectionMessages.UpdateFolderById(0, "New name"));
-        foldersCollection.tell(new FolderCollectionMessages.UpdateFolderById(4, "New name 1"));
-        foldersCollection.tell(new FolderCollectionMessages.GetFolderById(4, printer));
-        foldersCollection.tell(new FolderCollectionMessages.GetFoldersConditionally(printer, "New name"));
-        foldersCollection.tell(new FolderCollectionMessages.GetFoldersConditionally(printer, "fake"));
-        foldersCollection.tell(new FolderCollectionMessages.GetAllFolders(printer));
+//        foldersCollection.tell(new FolderCollectionMessages.DeleteFolderById(1));
+//        foldersCollection.tell(new FolderCollectionMessages.GetFolderById(1, printer));
+//        foldersCollection.tell(new FolderCollectionMessages.UpdateFolderById(0, "New name"));
+//        foldersCollection.tell(new FolderCollectionMessages.UpdateFolderById(4, "New name 1"));
+//        foldersCollection.tell(new FolderCollectionMessages.GetFolderById(4, printer));
+//        foldersCollection.tell(new FolderCollectionMessages.GetFoldersConditionally(printer, "New name"));
+//        foldersCollection.tell(new FolderCollectionMessages.GetFoldersConditionally(printer, "fake"));
+//        foldersCollection.tell(new FolderCollectionMessages.GetAllFolders(printer));
+ //       foldersCollection.tell(new FolderCollectionMessages.GetFoldersConditionally(someActor, "Testing"));
 
     }
 

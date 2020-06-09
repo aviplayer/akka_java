@@ -36,7 +36,7 @@ public class FolderMessages {
 
     @ToString
     @Getter
-    public static class ConditionNotMet implements FolderMessage, PrinterMessages, FolderAggregatorMessage, FolderCollectionMessages {
+    public static class ConditionNotMet extends PrinterMessages implements FolderMessage, FolderAggregatorMessage, FolderCollectionMessages {
         private final String condition;
         @JsonCreator
         public ConditionNotMet(String condition) {
@@ -54,7 +54,7 @@ public class FolderMessages {
     @AllArgsConstructor
     @ToString
     @Getter
-    public static class FolderData implements PrinterMessages, FolderCollectionMessages, FolderMessage, FolderAggregatorMessage {
+    public static class FolderData extends PrinterMessages implements FolderCollectionMessages, FolderMessage, FolderAggregatorMessage {
         private final int id;
         private final String name;
         private final ZonedDateTime createdAt;

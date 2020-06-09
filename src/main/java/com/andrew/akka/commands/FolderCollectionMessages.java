@@ -74,7 +74,7 @@ public interface FolderCollectionMessages {
 
     @ToString
     @Getter
-    public static class FoldersData implements FolderCollectionMessages, PrinterMessages {
+    public static class FoldersData extends PrinterMessages implements FolderCollectionMessages {
         List<FolderMessages.FolderData> folders;
         @JsonCreator
         public FoldersData(List<FolderMessages.FolderData> folders) {
@@ -85,7 +85,7 @@ public interface FolderCollectionMessages {
     @AllArgsConstructor
     @ToString
     @Getter
-    public static class FoldersDataWithCondition implements FolderCollectionMessages, PrinterMessages {
+    public static class FoldersDataWithCondition extends PrinterMessages implements FolderCollectionMessages {
         List<FolderMessages.FolderData> folders;
         String condition;
     }

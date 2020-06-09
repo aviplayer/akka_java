@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 public class PrinterActor extends AbstractBehavior<PrinterMessages> {
     private Logger log = getContext().getLog();
 
-    private PrinterActor(ActorContext<PrinterMessages> context) {
+    public PrinterActor(ActorContext<PrinterMessages> context) {
         super(context);
         log.info("Printer Actor created!");
     }

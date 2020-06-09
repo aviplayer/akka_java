@@ -4,14 +4,15 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
-public interface PrinterMessages extends FolderMessages.FolderMessage {
+public abstract class PrinterMessages extends Object {
     @RequiredArgsConstructor
     @ToString
     @Getter
-    class SimpleMessage implements PrinterMessages {
+    public static
+    class SimpleMessage extends PrinterMessages {
         private final String data;
     }
 
-    class Stop implements PrinterMessages {
+    public static class Stop extends PrinterMessages {
     }
 }

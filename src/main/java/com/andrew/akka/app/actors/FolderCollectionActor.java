@@ -17,6 +17,7 @@ import com.andrew.akka.commands.FolderCollectionEvent.*;
 import com.andrew.akka.commands.FolderCollectionMessages;
 import com.andrew.akka.commands.FolderCollectionMessages.*;
 import com.andrew.akka.commands.FolderMessages;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 
 import java.time.Duration;

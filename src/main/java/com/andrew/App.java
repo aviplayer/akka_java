@@ -2,7 +2,7 @@ package com.andrew;
 
 
 import akka.actor.typed.ActorSystem;
-import com.andrew.akka.app.cluster.ClusterListener;
+import com.andrew.akka.spring.akka.ClusterListener;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
@@ -15,7 +15,7 @@ public class App {
         Config nodeConfig1 = ConfigFactory.parseString("akka.remote.artery.canonical.port=25251")
                 .withFallback(ConfigFactory.load());
 
-        Config nodeConfig2 = ConfigFactory.parseString("akka.remote.artery.canonical.port=25252")
+        Config nodeConfig2 = ConfigFactory.parseString("akka.remote.netty.tcp.port=252521")
                 .withFallback(ConfigFactory.load());
 
         ActorSystem system = ActorSystem.create(ClusterListener.create(), "ClusterSystem");

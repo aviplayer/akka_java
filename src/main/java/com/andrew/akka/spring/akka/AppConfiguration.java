@@ -43,7 +43,7 @@ public class AppConfiguration {
                 Props.empty()
         );
 
-        ref.tell(new FolderMessages.ConditionNotMet("Fuck of !!!"));
+        ref.tell(new FolderMessages.ConditionNotMet("Hello from Akka !!!"));
 
 
         return ref;

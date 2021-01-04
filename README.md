@@ -39,3 +39,14 @@ FolderCollection should be able to receive the next messages:
 - GetFolderById(id, replyTo) - sends folder data to `replyTo` actor;
 - GetAllFolders(replyTo) - sends array of all folders data to `replyTo` actor (may be presented as array of tuples);
 - GetFoldersConditionally(nameCondition, replyTo) - sends array of folder data representing folders that met condition.
+
+###Step #3: Persistence
+On this step akka persistence capabilities should be applied to folder collection and folders
+themselve. Actors should process the same messages but do it in the persistent way so after
+restart the state of folder collection and folders should remain.
+
+###Step #4: Clustering
+On this step akka cluster should be added. FolderCollection should become a singleton actor,
+so it will be accessible from any akka node. All messages should stay the same.
+
+###Step #5: Spring Integration
